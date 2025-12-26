@@ -4,11 +4,12 @@ import styled from 'styled-components';
 const Container = styled.div`
     position: absolute;
     width: 70vw;
-    bottom: 10%;
+    bottom: 3%;
     left: 15vw;
     display: flex;
     justify-content: space-between;
     height: 5vh;
+
 `;
 const Input = styled.input`
     width: 70%;
