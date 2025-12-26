@@ -32,7 +32,11 @@ export default function CityInput() {
     return (
         <Container>
             <Input type="text" placeholder="Nom de la ville" />
-          {/*   <Button onClick={changeCity}>"Changer de ville"</Button> */}
+            <Button onClick={changeCity}>Changer de ville</Button> 
         </Container>
     );
+
+    function changeCity() {
+        // Logic to change the city will go here
+    }
 }

@@ -1,5 +1,5 @@
 #root {
-  height: 100vh;
+  min-height: 100vh;
   width: 100Vw;
   background: linear-gradient(to bottom left, #051937, #004d7a, #008793, #00bf72, #a8eb12);
 /*     overflow: hidden; */

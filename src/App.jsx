@@ -1,6 +1,8 @@
 import './App.css'
 import Header from './Components/Header/Header.jsx'
 import Meteo from './Components/Meteo/Meteo.jsx'
+import CityInput from './Components/CityInput/CityInput.jsx'
+
 
 function App() {
 
@@ -9,6 +11,7 @@ function App() {
           <Header />
           <main>
               <Meteo />
+              <CityInput />
           </main>
     </>
   )
