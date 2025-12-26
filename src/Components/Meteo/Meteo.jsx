@@ -1,4 +1,12 @@
 import styled from 'styled-components';
+import { useEffect, useState, useMemo, useCallback } from 'react'
+import axios from 'axios'
+import { useSelector } from 'react-redux'
+import { OpenWeather_API_KEY } from '../../API_KEYS'
+
+const IconWeather = styled.img`
+    width : 25%;
+`
 const Container = styled.div`
     color: #fefefe;
     width: 80vw;
@@ -41,19 +49,61 @@ const City = styled.h1`
     
 `;
 export default function Meteo() {
+
+    const [data, setData] = useState(false)
+
+    const city = useSelector((state) => state.city.value)
+    const lang = useSelector((state) => state.lang.value)
+
+    const icon = useMemo(() => {
+        return data ? `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png` : null
+    }, [data])
+
+    const getWeather = useCallback(() => {
+        if (city && lang) {
+            const units = lang === 'fr' ? 'metric' : 'imperial'
+            const url = 'https://api.openweathermap.org/data/2.5/weather?q='
+                + city + '&appid=' + OpenWeather_API_KEY + '&lang='
+                + lang + '&units=' + units
+            axios.get(url).then((res) => setData(res.data))
+                .catch((error) => {
+                    if (error.response && error.response.status === 404) {
+                        alert('Erreur : Ville non trouvée')
+                    } else {
+                        alert('Une erreur s\'est produite: ' + error.message)
+                    }
+                })
+        }
+    }, [city, lang])
+
+    useEffect(() => {
+        getWeather()
+    }, [getWeather])
+
+
+
+
     return (
         <Container>
-            <City>Paris</City>
+            {data && <City>{data.name}</City>}
 
             <TimeBlock>
                 <DataSpan>Date & Heure</DataSpan>
             </TimeBlock>
-            <DataBlock>
-                <TempSpan>25 degrès</TempSpan>
-            </DataBlock>
-            <DataBlock>
-                <DataSpan>Ensoleillé</DataSpan>
-            </DataBlock>
+            {icon && <IconWeather src={icon} />}
+            {data &&
+                <>
+                <DataBlock>
+                    <TempSpan>
+                        {Math.round(data.main.temp)}
+                        {lang === 'fr' ? '°C' : '°F'}
+                    </TempSpan>
+                </DataBlock>
+                <DataBlock>
+                    <DataSpan>{data.weather[0].description}</DataSpan>
+                </DataBlock>
+                </>
+            }
         </Container>
     );
 }
