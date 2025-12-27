@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import { useEffect, useState, useMemo } from 'react'
-import axios from 'axios'
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { OpenWeather_API_KEY, TimeZoneDB_API_KEY } from '../../API_KEYS'
+import { useWeather, useTimeZone } from '../../hooks/useWeather'
 
 const IconWeather = styled.img`
     width : 25%;
@@ -21,7 +20,7 @@ const Container = styled.div`
     align-items: center;
     justify-content: space-evenly;
     padding: 2rem;
-    
+
 `;
 const DataBlock = styled.div`
     display: flex;
@@ -47,53 +46,37 @@ const City = styled.h1`
     text-transform: uppercase;
     position: absolute;
     top: -23%;
-    
-`;
-export default function Meteo() {
-    const [meteoData, setMeteoData] = useState(null)
-    const [timeData, setTimeData] = useState(null)
 
+`;
+const LoadingSpan = styled(DataSpan)`
+    font-size: 1.5em;
+    opacity: 0.7;
+`;
+const ErrorSpan = styled(DataSpan)`
+    font-size: 1.2em;
+    color: #ff6b6b;
+`;
+
+export default function Meteo() {
     const city = useSelector((state) => state.city.value)
     const lang = useSelector((state) => state.lang.value)
 
+    // React Query hooks
+    const {
+        data: meteoData,
+        isLoading: isLoadingWeather,
+        error: weatherError
+    } = useWeather(city, lang)
+
+    const {
+        data: timeData,
+        isLoading: isLoadingTime
+    } = useTimeZone(meteoData?.coord?.lat, meteoData?.coord?.lon, lang)
+
+    // Icône météo
     const icon = useMemo(() => {
         return meteoData ? `https://openweathermap.org/img/wn/${meteoData.weather[0].icon}@2x.png` : null
     }, [meteoData])
-
-    // Récupération météo
-    useEffect(() => {
-        if (!city || !lang) return
-
-        const units = lang === 'fr' ? 'metric' : 'imperial'
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OpenWeather_API_KEY}&lang=${lang}&units=${units}`
-
-        axios.get(url)
-            .then((res) => setMeteoData(res.data))
-            .catch((error) => {
-                if (error.response?.status === 404) {
-                    alert(lang === 'fr' ? 'Erreur : Ville non trouvée' : 'Error: City not found')
-                } else {
-                    alert((lang === 'fr' ? 'Une erreur s\'est produite: ' : 'An error occurred: ') + error.message)
-                }
-            })
-    }, [city, lang])
-
-    // Récupération fuseau horaire
-    useEffect(() => {
-        if (!meteoData) return
-
-        const url = `https://api.timezonedb.com/v2.1/get-time-zone?key=${TimeZoneDB_API_KEY}&format=json&by=position&lat=${meteoData.coord.lat}&lng=${meteoData.coord.lon}`
-
-        axios.get(url)
-            .then((res) => setTimeData(res.data))
-            .catch((error) => {
-                if (error.response?.status === 404) {
-                    alert(lang === 'fr' ? 'Erreur : Donnée temporelle non trouvée' : 'Error: Time data not found')
-                } else {
-                    alert((lang === 'fr' ? 'Une erreur s\'est produite: ' : 'An error occurred: ') + error.message)
-                }
-            })
-    }, [meteoData, lang])
 
     // Formatage date/heure
     const { date, time } = useMemo(() => {
@@ -133,15 +116,44 @@ export default function Meteo() {
         }
     }, [timeData, lang])
 
+    // Gestion du chargement
+    if (isLoadingWeather) {
+        return (
+            <Container>
+                <LoadingSpan>
+                    {lang === 'fr' ? 'Chargement...' : 'Loading...'}
+                </LoadingSpan>
+            </Container>
+        )
+    }
+
+    // Gestion des erreurs
+    if (weatherError) {
+        return (
+            <Container>
+                <ErrorSpan>
+                    {weatherError.response?.status === 404
+                        ? (lang === 'fr' ? 'Ville non trouvée' : 'City not found')
+                        : (lang === 'fr' ? 'Une erreur s\'est produite' : 'An error occurred')
+                    }
+                </ErrorSpan>
+            </Container>
+        )
+    }
+
     return (
         <Container>
             {meteoData && <City>{meteoData.name}</City>}
 
             <TimeBlock>
-                <DataSpan >
-                    <span>{date} </span>
-                    <span> - </span>
-                    <span>{time}</span>
+                <DataSpan>
+                    {isLoadingTime ? '...' : (
+                        <>
+                            <span>{date} </span>
+                            <span> - </span>
+                            <span>{time}</span>
+                        </>
+                    )}
                 </DataSpan>
             </TimeBlock>
             {icon && <IconWeather src={icon} />}
