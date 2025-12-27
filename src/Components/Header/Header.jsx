@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { setLang } from '../../redux/langSlice'
+import { useSelector, useDispatch } from 'react-redux'
 
 const Container = styled.div`
     display: flex;
@@ -34,14 +36,28 @@ const Lang = styled.div`
     width: 13%;
     cursor: pointer;
 `;
+const LangOption = styled.span`
+    opacity: ${props => props.$active ? 1 : 0.4};
+    transition: opacity 0.2s ease;
+`;
+
 export default function Header() {
+    const dispatch = useDispatch()
+    const lang = useSelector((state) => state.lang.value)
+
+    const toggleLang = () => {
+        dispatch(setLang(lang === 'fr' ? 'en' : 'fr'))
+    }
+
     return (
         <Container>
-            <Title>Application météo</Title>
-            <Lang>
-                <span>FR</span>
+            <Title>
+                {lang === 'fr' ? 'Application météo' : 'Weather Application'}
+            </Title>
+            <Lang onClick={toggleLang}>
+                <LangOption $active={lang === 'fr'}>FR</LangOption>
                 <span>-</span>
-                <span>EN</span>
+                <LangOption $active={lang === 'en'}>EN</LangOption>
             </Lang>
         </Container>
     );

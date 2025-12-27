@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { OpenWeather_API_KEY, TimeZoneDB_API_KEY } from '../../API_KEYS'
@@ -50,9 +50,8 @@ const City = styled.h1`
     
 `;
 export default function Meteo() {
-
-    const [meteoData, setMeteoData] = useState(false)
-    const [timeData, setTimeData] = useState(false)
+    const [meteoData, setMeteoData] = useState(null)
+    const [timeData, setTimeData] = useState(null)
 
     const city = useSelector((state) => state.city.value)
     const lang = useSelector((state) => state.lang.value)
@@ -61,71 +60,78 @@ export default function Meteo() {
         return meteoData ? `https://openweathermap.org/img/wn/${meteoData.weather[0].icon}@2x.png` : null
     }, [meteoData])
 
-    const getWeather = useCallback(() => {
-        if (city && lang) {
-            const units = lang === 'fr' ? 'metric' : 'imperial'
-            const url = 'https://api.openweathermap.org/data/2.5/weather?q='
-                + city + '&appid=' + OpenWeather_API_KEY + '&lang='
-                + lang + '&units=' + units
-            axios.get(url).then((res) => setMeteoData(res.data))
-                .catch((error) => {
-                    if (error.response && error.response.status === 404) {
-                        alert('Erreur : Ville non trouvée')
-                    } else {
-                        alert('Une erreur s\'est produite: ' + error.message)
-                    }
-                })
-        }
+    // Récupération météo
+    useEffect(() => {
+        if (!city || !lang) return
+
+        const units = lang === 'fr' ? 'metric' : 'imperial'
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OpenWeather_API_KEY}&lang=${lang}&units=${units}`
+
+        axios.get(url)
+            .then((res) => setMeteoData(res.data))
+            .catch((error) => {
+                if (error.response?.status === 404) {
+                    alert(lang === 'fr' ? 'Erreur : Ville non trouvée' : 'Error: City not found')
+                } else {
+                    alert((lang === 'fr' ? 'Une erreur s\'est produite: ' : 'An error occurred: ') + error.message)
+                }
+            })
     }, [city, lang])
 
+    // Récupération fuseau horaire
+    useEffect(() => {
+        if (!meteoData) return
 
-    const getTimeZone = useCallback(() => {
-        if (meteoData) {
-            const url = 'http://api.timezonedb.com/v2.1/get-time-zone?key=' +
-                TimeZoneDB_API_KEY + '&format=json&by=position&lat=' + meteoData.coord.lat
-                + '&lng=' + meteoData.coord.lon
-            axios.get(url)
-                .then((res) => setTimeData(res.data))
-                .catch((error) => {
-                    if (error.response && error.response.status === 404) {
-                        alert('Erreur : Donnée temporelle non trouvée !')
-                    } else {
-                        alert('Une erreur s\'est produite: ' + error.message)
-                    }
-                })
+        const url = `https://api.timezonedb.com/v2.1/get-time-zone?key=${TimeZoneDB_API_KEY}&format=json&by=position&lat=${meteoData.coord.lat}&lng=${meteoData.coord.lon}`
+
+        axios.get(url)
+            .then((res) => setTimeData(res.data))
+            .catch((error) => {
+                if (error.response?.status === 404) {
+                    alert(lang === 'fr' ? 'Erreur : Donnée temporelle non trouvée' : 'Error: Time data not found')
+                } else {
+                    alert((lang === 'fr' ? 'Une erreur s\'est produite: ' : 'An error occurred: ') + error.message)
+                }
+            })
+    }, [meteoData, lang])
+
+    // Formatage date/heure
+    const { date, time } = useMemo(() => {
+        if (!timeData?.formatted) return { date: '', time: '' }
+
+        const dateObj = new Date(timeData.formatted)
+
+        const daysFr = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
+        const monthsFr = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+            'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
+
+        const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        const monthsEn = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December']
+
+        const days = lang === 'fr' ? daysFr : daysEn
+        const months = lang === 'fr' ? monthsFr : monthsEn
+
+        const dayName = days[dateObj.getDay()]
+        const day = dateObj.getDate()
+        const month = months[dateObj.getMonth()]
+        const hours = dateObj.getHours()
+        const minutes = dateObj.getMinutes().toString().padStart(2, '0')
+
+        let formattedTime
+        if (lang === 'fr') {
+            formattedTime = `${hours}h${minutes}`
+        } else {
+            const ampm = hours >= 12 ? 'PM' : 'AM'
+            const hours12 = hours % 12 || 12
+            formattedTime = `${hours12}:${minutes} ${ampm}`
         }
-    }, [meteoData])
-
-    useEffect(() => {
-        getWeather()
-    }, [getWeather])
-
-    useEffect(() => {
-        getTimeZone()
-    }, [getTimeZone])
-
-    const formatDateTime = useCallback(() => {
-        if (!timeData || !timeData.formatted) return { date: '', time: '' };
-
-        const date = new Date(timeData.formatted);
-
-        const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-        const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
-            'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-
-        const dayName = days[date.getDay()];
-        const day = date.getDate();
-        const month = months[date.getMonth()];
-        const hours = date.getHours();
-        const minutes = date.getMinutes().toString().padStart(2, '0');
 
         return {
             date: `${dayName} ${day} ${month}`,
-            time: `${hours}h${minutes}`
-        };
-    }, [timeData]);
-
-    const { date, time } = formatDateTime();
+            time: formattedTime
+        }
+    }, [timeData, lang])
 
     return (
         <Container>
