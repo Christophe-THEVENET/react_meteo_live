@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const citySlice = createSlice({
     name: 'cityName',
     initialState: {
-        value: 'teilhet'
+        value: 'Teilhet'
     },
     reducers: {
         setCity: (state, action) => {
