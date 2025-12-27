@@ -32,3 +32,31 @@ export function useTimeZone(lat, lon) {
         retry: 1
     })
 }
+
+// Hook pour rechercher des villes (autocomplete) avec GeoNames
+export function useCitySearch(query) {
+    return useQuery({
+        queryKey: ['citySearch', query],
+        queryFn: async () => {
+            const url = `https://secure.geonames.org/searchJSON?name_startsWith=${encodeURIComponent(query)}&featureClass=P&maxRows=10&orderby=population&username=digitob`
+            const { data } = await axios.get(url)
+
+            // Transformer les résultats GeoNames
+            const cities = data.geonames?.map(item => ({
+                name: item.name,
+                country: item.countryCode,
+                state: item.adminName1
+            })) || []
+
+            // Dédupliquer par nom + pays
+            const unique = cities.filter((city, index, self) =>
+                index === self.findIndex(c => c.name === city.name && c.country === city.country)
+            )
+
+            return unique.slice(0, 5)
+        },
+        enabled: query.length >= 2,
+        staleTime: 10 * 60 * 1000,
+        retry: 1
+    })
+}
