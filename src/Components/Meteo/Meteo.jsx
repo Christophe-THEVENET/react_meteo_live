@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useWeather, useTimeZone } from '../../hooks/useWeather'
+import { useWeather, useTimeZone, useGeolocation } from '../../hooks/useWeather'
 
 const IconWeather = styled.img`
     width : 25%;
@@ -61,6 +61,9 @@ export default function Meteo() {
     const city = useSelector((state) => state.city.value)
     const lang = useSelector((state) => state.lang.value)
 
+    // Géolocalisation automatique à la première visite
+    useGeolocation()
+
     // React Query hooks
     const {
         data: meteoData,
@@ -115,6 +118,17 @@ export default function Meteo() {
             time: formattedTime
         }
     }, [timeData, lang])
+
+    // Pas de ville sélectionnée (première visite, en attente de géolocalisation)
+    if (!city) {
+        return (
+            <Container>
+                <LoadingSpan>
+                    {lang === 'fr' ? 'Recherchez une ville...' : 'Search for a city...'}
+                </LoadingSpan>
+            </Container>
+        )
+    }
 
     // Gestion du chargement
     if (isLoadingWeather) {
