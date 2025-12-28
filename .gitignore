@@ -23,4 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 memo.md
-API_KEYS.js
+
+# API Keys
+src/API_KEYS.js
