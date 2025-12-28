@@ -42,8 +42,8 @@ Application météo moderne développée avec React 19, permettant de consulter 
 
 ```bash
 # Cloner le repo
-git clone https://github.com/Christophe-THEVENET/react_meteo_easy.git
-cd meteo-easy
+git clone https://github.com/Christophe-THEVENET/react_meteo_live.git
+cd react_meteo_live
 
 # Installer les dépendances
 npm install
