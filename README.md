@@ -18,8 +18,11 @@ Application météo moderne développée avec React 19, permettant de consulter 
 | Technologie | Usage |
 |-------------|-------|
 | React 19 | UI Components |
-| Redux Toolkit | State management |
 | React Query | Data fetching & caching |
+| Redux Toolkit | State management |
+| Redux Persist | State persistence |
+| Axios | API calls |
+| Jest | Unit testing |
 | Styled Components | CSS-in-JS |
 | Vite | Build & dev server |
 
@@ -39,7 +42,7 @@ Application météo moderne développée avec React 19, permettant de consulter 
 
 ```bash
 # Cloner le repo
-git clone https://github.com/votre-repo/meteo-easy.git
+git clone https://github.com/Christophe-THEVENET/react_meteo_easy.git
 cd meteo-easy
 
 # Installer les dépendances
