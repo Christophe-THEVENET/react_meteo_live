@@ -15,6 +15,7 @@ const Container = styled.div`
     -webkit-backdrop-filter: blur(13.8px);
     border: 2px solid rgba(255, 255, 255, 0.74);
     border-radius: 20px;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;

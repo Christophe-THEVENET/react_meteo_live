@@ -1,16 +1,101 @@
-# React + Vite
+# Meteo-Easy
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application météo moderne développée avec React 19, permettant de consulter la météo en temps réel pour n'importe quelle ville dans le monde.
 
-Currently, two official plugins are available:
+![Screenshot](src/assets/screen.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Fonctionnalités
 
-## React Compiler
+- **Recherche de ville** avec autocomplétion (API GeoNames)
+- **Géolocalisation automatique** à la première visite
+- **Données météo en temps réel** (OpenWeatherMap API)
+- **Heure locale** de la ville affichée (TimeZoneDB API)
+- **Multilingue** FR/EN avec formatage adapté (date, heure, unités)
+- **Persistance** de la ville et langue (Redux Persist)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack technique
 
-## Expanding the ESLint configuration
+| Technologie | Usage |
+|-------------|-------|
+| React 19 | UI Components |
+| Redux Toolkit | State management |
+| React Query | Data fetching & caching |
+| Styled Components | CSS-in-JS |
+| Vite | Build & dev server |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project. 
+
+## Flow de données
+- **Première visite :** géolocalisation → GeoNames reverse geocoding → setCity()
+- **Visites suivantes :** Redux Persist restaure la ville depuis localStorage
+- **Recherche :** useCitySearch() → suggestions → setCity() → useWeather() → affichage
+
+## Points forts
+- **Cache intelligent** (React Query : 5-30 min selon les données)
+- **Persistance automatique** (ville + langue)
+- **Multilingue FR/EN** (UI + API + formatage date/heure)
+- **Design glassmorphism**
+
+## Installation
+
+```bash
+# Cloner le repo
+git clone https://github.com/votre-repo/meteo-easy.git
+cd meteo-easy
+
+# Installer les dépendances
+npm install
+
+# Lancer en développement
+npm run dev
+```
+
+L'application sera accessible sur `http://localhost:5173`
+
+## Configuration des API Keys
+
+Créer un fichier `src/API_KEYS.js` :
+
+```javascript
+export const OpenWeather_API_KEY = 'votre_clé_openweathermap'
+export const TimeZoneDB_API_KEY = 'votre_clé_timezonedb'
+```
+
+Comptes gratuits disponibles sur :
+- [OpenWeatherMap](https://openweathermap.org/api)
+- [TimeZoneDB](https://timezonedb.com/api)
+- [GeoNames](https://www.geonames.org/export/web-services.html)
+
+## Architecture
+
+```
+src/
+├── Components/
+│   ├── Header/      # Navbar + toggle langue
+│   ├── Meteo/       # Affichage météo
+│   └── CityInput/   # Recherche ville
+├── hooks/           # React Query hooks (useWeather, useTimeZone, useCitySearch)
+├── redux/           # Store + slices (city, lang)
+└── main.jsx         # Providers setup
+```
+
+## Tests
+
+```bash
+npm test         # Lancer les tests
+npm run test:watch  # Mode watch
+```
+
+18 tests unitaires couvrant :
+- **Redux** : citySlice et langSlice (états, actions)
+- **Header** : rendu FR/EN, toggle langue
+- **CityInput** : placeholder, recherche, dispatch
+
+## Scripts
+
+```bash
+npm run dev      # Serveur de développement
+npm run build    # Build production
+npm run preview  # Preview du build
+npm run lint     # ESLint
+npm test         # Tests Jest
+```

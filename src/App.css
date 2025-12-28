@@ -1,8 +1,8 @@
 #root {
-  min-height: 100vh;
-  width: 100Vw;
+  height: 100vh;
+  width: 100%;
   background: linear-gradient(to bottom left, #051937, #004d7a, #008793, #00bf72, #a8eb12);
-/*     overflow: hidden; */
+  overflow: hidden;
 }
 
 * {
@@ -15,5 +15,6 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 60px);
+    height: 90vh;
+    position: relative;
 }
