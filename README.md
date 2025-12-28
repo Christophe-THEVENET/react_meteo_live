@@ -1,4 +1,4 @@
-# Meteo-Easy
+# EasyMeteoLive
 
 Application météo moderne développée avec React 19, permettant de consulter la météo en temps réel pour n'importe quelle ville dans le monde.
 
