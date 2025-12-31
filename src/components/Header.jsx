@@ -10,23 +10,23 @@ export default function Header() {
     }
 
     return (
-        <header className="flex justify-between items-center w-full h-16 px-6 bg-white/20 backdrop-blur-md border-b border-white/30 shadow-lg">
-            {/* Titre */}
-            <h1 className="text-xl md:text-2xl font-semibold uppercase tracking-wide text-white drop-shadow-md">
-                {lang === 'fr' ? 'Application météo' : 'Weather Application'}
+        <header className="relative z-10 flex justify-between items-center w-full h-16 px-6 bg-black/40 backdrop-blur-md border-b border-purple-500/30 neon-border-purple">
+            {/* Titre avec effet néon */}
+            <h1 className="text-xl md:text-2xl font-bold uppercase tracking-widest text-cyan-400 neon-text-cyan neon-flicker">
+                {lang === 'fr' ? 'Météo Cyber' : 'Cyber Weather'}
             </h1>
 
-            {/* Toggle langue */}
+            {/* Toggle langue avec effet glitch */}
             <Button
-                variant="secondary"
+                variant="outline"
                 onClick={toggleLang}
-                className="flex gap-2 bg-primary/90 hover:bg-primary text-white"
+                className="glitch-hover border-2 border-purple-500/60 bg-purple-900/30 hover:bg-purple-800/50 text-purple-300 hover:text-white neon-border-purple transition-all duration-300"
             >
-                <span className={lang === 'fr' ? 'opacity-100' : 'opacity-40'}>
+                <span className={`transition-all ${lang === 'fr' ? 'text-cyan-400 neon-text-cyan' : 'opacity-40'}`}>
                     FR
                 </span>
-                <span className="opacity-60">-</span>
-                <span className={lang === 'en' ? 'opacity-100' : 'opacity-40'}>
+                <span className="mx-2 text-purple-400">/</span>
+                <span className={`transition-all ${lang === 'en' ? 'text-pink-400 neon-text-pink' : 'opacity-40'}`}>
                     EN
                 </span>
             </Button>
