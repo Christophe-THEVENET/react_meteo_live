@@ -78,12 +78,23 @@ export function useGeolocation() {
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 const { latitude, longitude } = position.coords
-                // Reverse geocoding avec GeoNames
-                const url = `https://secure.geonames.org/findNearbyPlaceNameJSON?lat=${latitude}&lng=${longitude}&username=digitob`
+                // Reverse geocoding avec GeoNames - on demande plusieurs résultats pour trouver une ville
+                const url = `https://secure.geonames.org/findNearbyPlaceNameJSON?lat=${latitude}&lng=${longitude}&radius=10&maxRows=5&username=digitob`
                 try {
                     const { data } = await axios.get(url)
-                    if (data.geonames?.[0]?.name) {
-                        dispatch(setCity(data.geonames[0].name))
+                    if (data.geonames?.length > 0) {
+                        // Chercher une ville (PPL*) plutôt qu'un quartier
+                        // fcode: PPL = ville, PPLA = capitale admin, PPLC = capitale, etc.
+                        const cityResult = data.geonames.find(g =>
+                            g.fcode?.startsWith('PPL') && !g.name.includes('Quartier')
+                        ) || data.geonames[0]
+
+                        // Utiliser adminName1 (grande ville) si le nom semble être un quartier
+                        const cityName = cityResult.name.includes('-') || cityResult.name.includes('Arrondissement')
+                            ? cityResult.adminName1 || cityResult.name
+                            : cityResult.name
+
+                        dispatch(setCity(cityName))
                     }
                 } catch (error) {
                     console.error('Erreur géolocalisation:', error)
