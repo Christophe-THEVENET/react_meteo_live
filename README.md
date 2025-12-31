@@ -2,6 +2,28 @@
 
 Application météo moderne développée avec React 19, permettant de consulter la météo en temps réel pour n'importe quelle ville dans le monde.
 
+> ## **Version stack actualisé**
+>
+> Une version refactorisée avec une stack moderne est disponible sur la branche [`modern-stack`](https://github.com/Christophe-THEVENET/react_meteo_live/tree/modern-stack)
+>
+> | Ancienne stack (main) | Nouvelle stack (modern-stack) |
+> |----------------------|------------------------------|
+> | Redux + Redux Persist | **Zustand** (persist intégré) |
+> | styled-components | **Tailwind CSS v4** |
+> | Formulaires manuels | **React Hook Form + Zod** |
+> | Design glassmorphism | **Design Cyberpunk Neon** |
+>
+> **Design généré avec le skill Claude [`frontend-design`](https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design)** : esthétique cyberpunk avec effets néon violet/cyan/rose, animations glitch, grille en perspective style Tron.
+>
+> ![Screenshot](src/assets/cyberpunk.png)
+>
+> ```bash
+> git checkout modern-stack
+> npm install
+> npm run dev
+> ```
+
+## **Version stack de base (redux, redux-persist, styled-components, formulaire manuel)**
 ![Screenshot](src/assets/screen.png)
 
 ## Fonctionnalités
