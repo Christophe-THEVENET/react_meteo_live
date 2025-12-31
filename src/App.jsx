@@ -1,19 +1,16 @@
-import './App.css'
-import Header from './Components/Header/Header.jsx'
-import Meteo from './Components/Meteo/Meteo.jsx'
-import CityInput from './Components/CityInput/CityInput.jsx'
-
+import Header from '@/components/Header'
+import Meteo from '@/components/Meteo'
+import CityInput from '@/components/CityInput'
 
 function App() {
-
   return (
-    <>
-          <Header />
-          <main>
-              <Meteo />
-              <CityInput />
-          </main>
-    </>
+    <div className="min-h-screen weather-gradient">
+      <Header />
+      <main className="relative flex items-center justify-center min-h-[calc(100vh-4rem)] pt-16 pb-24">
+        <Meteo />
+        <CityInput />
+      </main>
+    </div>
   )
 }
 

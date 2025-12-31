@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: hsl(200 50% 95%);
+  --color-foreground: hsl(200 50% 10%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(200 50% 10%);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(200 50% 10%);
+  --color-primary: hsl(180 40% 30%);
+  --color-primary-foreground: hsl(0 0% 98%);
+  --color-secondary: hsl(200 30% 90%);
+  --color-secondary-foreground: hsl(200 50% 10%);
+  --color-muted: hsl(200 20% 90%);
+  --color-muted-foreground: hsl(200 20% 40%);
+  --color-accent: hsl(180 50% 85%);
+  --color-accent-foreground: hsl(180 50% 15%);
+  --color-destructive: hsl(0 84% 60%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+  --color-border: hsl(200 20% 82%);
+  --color-input: hsl(200 20% 82%);
+  --color-ring: hsl(180 40% 30%);
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.25rem;
+}
+
+/* Background gradient for weather app */
+.weather-gradient {
+  background: linear-gradient(135deg,
+    hsl(200, 60%, 50%) 0%,
+    hsl(180, 50%, 40%) 50%,
+    hsl(160, 40%, 45%) 100%
+  );
+  min-height: 100vh;
+}

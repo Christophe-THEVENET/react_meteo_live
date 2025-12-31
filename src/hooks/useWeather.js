@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { OpenWeather_API_KEY, TimeZoneDB_API_KEY } from '../API_KEYS'
-import { setCity } from '../redux/citySlice'
+import { useAppStore } from '../store/useAppStore'
 
 // Hook pour récupérer les données météo
 export function useWeather(city, lang) {
@@ -66,8 +65,8 @@ export function useCitySearch(query) {
 
 // Hook pour géolocaliser l'utilisateur et obtenir sa ville
 export function useGeolocation() {
-    const dispatch = useDispatch()
-    const city = useSelector((state) => state.city.value)
+    const city = useAppStore((state) => state.city)
+    const setCity = useAppStore((state) => state.setCity)
 
     useEffect(() => {
         // Ne rien faire si une ville est déjà définie (persistée ou choisie)
@@ -83,7 +82,7 @@ export function useGeolocation() {
                 try {
                     const { data } = await axios.get(url)
                     if (data.geonames?.[0]?.name) {
-                        dispatch(setCity(data.geonames[0].name))
+                        setCity(data.geonames[0].name)
                     }
                 } catch (error) {
                     console.error('Erreur géolocalisation:', error)
@@ -93,5 +92,5 @@ export function useGeolocation() {
                 console.log('Géolocalisation refusée:', error.message)
             }
         )
-    }, [city, dispatch])
+    }, [city, setCity])
 }
