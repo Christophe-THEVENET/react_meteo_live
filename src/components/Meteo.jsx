@@ -34,24 +34,33 @@ export default function Meteo() {
 
         const dateObj = new Date(timeData.formatted)
 
-        const daysFr = ['DIM', 'LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM']
-        const monthsFr = ['JAN', 'FÉV', 'MAR', 'AVR', 'MAI', 'JUN', 'JUL', 'AOÛ', 'SEP', 'OCT', 'NOV', 'DÉC']
+        const daysFr = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
+        const monthsFr = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 
-        const daysEn = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
-        const monthsEn = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+        const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        const monthsEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
         const days = lang === 'fr' ? daysFr : daysEn
         const months = lang === 'fr' ? monthsFr : monthsEn
 
         const dayName = days[dateObj.getDay()]
-        const day = dateObj.getDate().toString().padStart(2, '0')
+        const day = dateObj.getDate()
         const month = months[dateObj.getMonth()]
-        const hours = dateObj.getHours().toString().padStart(2, '0')
+        const hours = dateObj.getHours()
         const minutes = dateObj.getMinutes().toString().padStart(2, '0')
 
+        let formattedTime
+        if (lang === 'fr') {
+            formattedTime = `${hours.toString().padStart(2, '0')}:${minutes}`
+        } else {
+            const ampm = hours >= 12 ? 'PM' : 'AM'
+            const hours12 = hours % 12 || 12
+            formattedTime = `${hours12}:${minutes} ${ampm}`
+        }
+
         return {
-            date: `${dayName}_${day}_${month}`,
-            time: `${hours}:${minutes}`
+            date: `${dayName} ${day} ${month}`,
+            time: formattedTime
         }
     }, [timeData, lang])
 
