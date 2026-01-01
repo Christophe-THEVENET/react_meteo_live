@@ -1,11 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import axios from 'axios'
-import { OpenWeather_API_KEY, TimeZoneDB_API_KEY } from '../API_KEYS'
+/* import { OpenWeather_API_KEY, TimeZoneDB_API_KEY } from '../API_KEYS' */
 import { useAppStore } from '../store/useAppStore'
 
 // Hook pour récupérer les données météo
 export function useWeather(city, lang) {
+
+
+    const OpenWeather_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
+
     return useQuery({
         queryKey: ['weather', city, lang],
         queryFn: async () => {
@@ -22,6 +26,8 @@ export function useWeather(city, lang) {
 
 // Hook pour récupérer le fuseau horaire
 export function useTimeZone(lat, lon) {
+    const TimeZoneDB_API_KEY = import.meta.env.VITE_TIMEZONEDB_API_KEY;
+
     return useQuery({
         queryKey: ['timezone', lat, lon],
         queryFn: async () => {
