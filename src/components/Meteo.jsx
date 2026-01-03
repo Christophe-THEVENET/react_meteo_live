@@ -123,7 +123,7 @@ export default function Meteo() {
         <Card className="relative w-[90%] max-w-xl bg-black/50 backdrop-blur-md border-2 border-purple-500/40 neon-border-purple overflow-visible">
             {/* Nom de la ville - néon principal */}
             {meteoData && (
-                <h1 className="absolute -top-14 left-1/2 -translate-x-1/2 text-4xl md:text-5xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 neon-flicker whitespace-nowrap flex items-center gap-3">
+                <h1 className="absolute -top-18 left-1/2 -translate-x-1/2 text-4xl md:text-5xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 neon-flicker whitespace-nowrap flex items-center gap-3">
                     <MapPin className="w-8 h-8 text-pink-400 inline" />
                     {meteoData.name}
                 </h1>
@@ -143,7 +143,7 @@ export default function Meteo() {
 
             <CardContent className="flex flex-col items-center py-6 gap-2 scanlines">
                 {/* Date */}
-                <p className="text-sm font-mono text-purple-400 uppercase tracking-widest">
+                <p className="text-lg font-mono text-purple-400 uppercase tracking-widest">
                     {isLoadingTime ? '// SYNC...' : `// ${date}`}
                 </p>
 

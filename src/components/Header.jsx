@@ -13,7 +13,7 @@ export default function Header() {
         <header className="relative z-10 flex justify-between items-center w-full h-16 px-6 bg-black/40 backdrop-blur-md border-b border-purple-500/30 neon-border-purple">
             {/* Titre avec effet néon */}
             <h1 className="text-xl md:text-2xl font-bold uppercase tracking-widest text-cyan-400 neon-text-cyan neon-flicker">
-                {lang === 'fr' ? 'Météo Cyber' : 'Cyber Weather'}
+                {lang === 'fr' ? 'Cyber Météo' : 'Cyber Weather'}
             </h1>
 
             {/* Toggle langue avec effet glitch */}
