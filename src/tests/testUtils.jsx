@@ -1,41 +1,37 @@
 import { render } from '@testing-library/react'
-import { Provider } from 'react-redux'
-import { configureStore } from '@reduxjs/toolkit'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import cityReducer from '../redux/citySlice'
-import langReducer from '../redux/langSlice'
+import { useAppStore } from '../store/useAppStore'
 
-export function renderWithProviders(
-    ui,
-    {
-        preloadedState = {},
-        store = configureStore({
-            reducer: {
-                city: cityReducer,
-                lang: langReducer
-            },
-            preloadedState
-        }),
-        ...renderOptions
-    } = {}
-) {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: {
-                retry: false
-            }
-        }
-    })
+// Reset le store Zustand avant chaque test (sans écraser les actions)
+export function resetStore(initialState = {}) {
+  const defaultState = {
+    city: null,
+    lang: 'fr',
+    ...initialState,
+  }
+  useAppStore.setState(defaultState)
+}
 
-    function Wrapper({ children }) {
-        return (
-            <Provider store={store}>
-                <QueryClientProvider client={queryClient}>
-                    {children}
-                </QueryClientProvider>
-            </Provider>
-        )
-    }
+export function renderWithProviders(ui, { initialState = {}, ...renderOptions } = {}) {
+  // Reset le store avec l'état initial
+  resetStore(initialState)
 
-    return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+
+  function Wrapper({ children }) {
+    return (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+  }
+
+  return {
+    store: useAppStore,
+    ...render(ui, { wrapper: Wrapper, ...renderOptions }),
+  }
 }

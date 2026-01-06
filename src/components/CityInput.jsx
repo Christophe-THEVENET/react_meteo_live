@@ -10,104 +10,105 @@ import { Search, Zap } from 'lucide-react'
 
 // Schéma Zod pour la validation
 const citySchema = z.object({
-    city: z.string().min(2, 'Minimum 2 caractères')
+  city: z.string().min(2, 'Minimum 2 caractères'),
 })
 
 export default function CityInput() {
-    const lang = useAppStore((state) => state.lang)
-    const setCity = useAppStore((state) => state.setCity)
-    const [showSuggestions, setShowSuggestions] = useState(false)
+  const lang = useAppStore((state) => state.lang)
+  const setCity = useAppStore((state) => state.setCity)
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
-    // React Hook Form
-    const { register, handleSubmit, watch, reset } = useForm({
-        resolver: zodResolver(citySchema),
-        defaultValues: { city: '' }
-    })
+  // React Hook Form
+  const { register, handleSubmit, watch, reset } = useForm({
+    resolver: zodResolver(citySchema),
+    defaultValues: { city: '' },
+  })
 
-    // Valeur actuelle de l'input (pour l'autocomplete)
-    const inputValue = watch('city')
+  // Valeur actuelle de l'input (pour l'autocomplete)
+  const inputValue = watch('city')
 
-    // Hook de recherche de villes
-    const { data: suggestions } = useCitySearch(inputValue || '')
+  // Hook de recherche de villes
+  const { data: suggestions } = useCitySearch(inputValue || '')
 
-    // Afficher les suggestions quand on tape (>= 2 caractères)
-    useEffect(() => {
-        if (inputValue?.length >= 2) {
-            setShowSuggestions(true)
-        } else {
-            setShowSuggestions(false)
-        }
-    }, [inputValue])
-
-    // Soumission du formulaire
-    const onSubmit = (data) => {
-        setCity(data.city.trim())
-        reset()
-        setShowSuggestions(false)
+  // Afficher les suggestions quand on tape (>= 2 caractères)
+  useEffect(() => {
+    if (inputValue?.length >= 2) {
+      setShowSuggestions(true)
+    } else {
+      setShowSuggestions(false)
     }
+  }, [inputValue])
 
-    // Sélection d'une suggestion
-    const selectCity = (city) => {
-        setCity(city.name)
-        reset()
-        setShowSuggestions(false)
-    }
+  // Soumission du formulaire
+  const onSubmit = (data) => {
+    setCity(data.city.trim())
+    reset()
+    setShowSuggestions(false)
+  }
 
-    return (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl z-10">
-            <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex gap-3"
-            >
-                {/* Input avec suggestions */}
-                <div className="relative flex-1">
-                    <Input
-                        {...register('city')}
-                        type="text"
-                        placeholder={lang === 'fr' ? '// ENTRER LOCALISATION...' : '// ENTER LOCATION...'}
-                        className="h-14 text-lg font-mono bg-black/60 backdrop-blur-md border-2 border-cyan-500/50 text-cyan-300 placeholder:text-cyan-700 uppercase tracking-wider neon-border-cyan focus:border-cyan-400 focus:ring-cyan-400/50"
-                        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                        autoComplete="off"
-                    />
+  // Sélection d'une suggestion
+  const selectCity = (city) => {
+    setCity(city.name)
+    reset()
+    setShowSuggestions(false)
+  }
 
-                    {/* Liste des suggestions - style terminal */}
-                    {showSuggestions && suggestions?.length > 0 && (
-                        <ul className="absolute bottom-full left-0 right-0 mb-2 bg-black/90 backdrop-blur-md rounded border-2 border-purple-500/50 overflow-hidden neon-border-purple">
-                            <li className="px-4 py-2 text-xs text-purple-400 border-b border-purple-500/30 font-mono">
-                                {`> ${suggestions.length} RÉSULTATS TROUVÉS`}
-                            </li>
-                            {suggestions.map((city, index) => (
-                                <li
-                                    key={`${city.name}-${city.country}-${index}`}
-                                    onMouseDown={() => selectCity(city)}
-                                    className="px-4 py-3 font-mono text-cyan-300 cursor-pointer hover:bg-purple-900/50 hover:text-pink-400 border-b border-purple-500/20 last:border-b-0 transition-all duration-150 flex items-center gap-2"
-                                >
-                                    <Zap className="w-4 h-4 text-purple-400" />
-                                    <span>{city.name}</span>
-                                    <span className="text-purple-400">_</span>
-                                    <span className="text-pink-400">{city.country}</span>
-                                    {city.state && (
-                                        <span className="text-cyan-600 text-sm ml-auto">
-                                            [{city.state}]
-                                        </span>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
+  return (
+    <div className="absolute bottom-6 left-1/2 z-10 w-[90%] max-w-2xl -translate-x-1/2">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex gap-3">
+        {/* Input avec suggestions */}
+        <div className="relative flex-1">
+          <Input
+            {...register('city')}
+            type="text"
+            placeholder={
+              lang === 'fr'
+                ? '// ENTRER LOCALISATION...'
+                : '// ENTER LOCATION...'
+            }
+            className="neon-border-cyan h-14 border-2 border-cyan-500/50 bg-black/60 font-mono text-lg tracking-wider text-cyan-300 uppercase backdrop-blur-md placeholder:text-cyan-700 focus:border-cyan-400 focus:ring-cyan-400/50"
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+            autoComplete="off"
+          />
 
-                {/* Bouton rechercher - style néon */}
-                <Button
-                    type="submit"
-                    className="h-14 px-6 font-mono uppercase tracking-wider bg-purple-900/60 hover:bg-purple-700/80 border-2 border-purple-500/60 text-purple-200 hover:text-white neon-border-purple transition-all duration-300 glitch-hover"
+          {/* Liste des suggestions - style terminal */}
+          {showSuggestions && suggestions?.length > 0 && (
+            <ul className="neon-border-purple absolute right-0 bottom-full left-0 mb-2 overflow-hidden rounded border-2 border-purple-500/50 bg-black/90 backdrop-blur-md">
+              <li className="border-b border-purple-500/30 px-4 py-2 font-mono text-xs text-purple-400">
+                {`> ${suggestions.length} RÉSULTATS TROUVÉS`}
+              </li>
+              {suggestions.map((city, index) => (
+                <li
+                  key={`${city.name}-${city.country}-${index}`}
+                  onMouseDown={() => selectCity(city)}
+                  className="flex cursor-pointer items-center gap-2 border-b border-purple-500/20 px-4 py-3 font-mono text-cyan-300 transition-all duration-150 last:border-b-0 hover:bg-purple-900/50 hover:text-pink-400"
                 >
-                    <Search className="w-5 h-5 mr-2" />
-                    <span className="hidden sm:inline">
-                        {lang === 'fr' ? 'Scanner' : 'Scan'}
+                  <Zap className="h-4 w-4 text-purple-400" />
+                  <span>{city.name}</span>
+                  <span className="text-purple-400">_</span>
+                  <span className="text-pink-400">{city.country}</span>
+                  {city.state && (
+                    <span className="ml-auto text-sm text-cyan-600">
+                      [{city.state}]
                     </span>
-                </Button>
-            </form>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-    )
+
+        {/* Bouton rechercher - style néon */}
+        <Button
+          type="submit"
+          className="neon-border-purple glitch-hover h-14 border-2 border-purple-500/60 bg-purple-900/60 px-6 font-mono tracking-wider text-purple-200 uppercase transition-all duration-300 hover:bg-purple-700/80 hover:text-white"
+        >
+          <Search className="mr-2 h-5 w-5" />
+          <span className="hidden sm:inline">
+            {lang === 'fr' ? 'Scanner' : 'Scan'}
+          </span>
+        </Button>
+      </form>
+    </div>
+  )
 }

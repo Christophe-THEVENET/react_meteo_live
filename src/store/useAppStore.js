@@ -26,6 +26,6 @@ export const useAppStore = create(
     }),
     {
       name: 'meteo-easy', // clé localStorage (même que Redux Persist avant)
-    }
-  )
+    },
+  ),
 )
