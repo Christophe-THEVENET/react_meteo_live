@@ -118,7 +118,7 @@ export default function Meteo() {
   // Pas de ville sélectionnée
   if (!city) {
     return (
-      <Card className="neon-border-purple scanlines relative w-[90%] max-w-xl overflow-hidden border-2 border-purple-500/30 bg-black/50 backdrop-blur-md">
+      <Card className="bg-black/50 neon-border-purple scanlines relative w-[90%] max-w-xl overflow-hidden border-2 border-purple-500/30 backdrop-blur-md">
         <CardContent className="flex flex-col items-center justify-center gap-4 py-20">
           <WifiOff className="neon-pulse h-16 w-16 text-purple-500/50" />
           <p className="font-mono text-lg tracking-widest text-purple-400 uppercase">

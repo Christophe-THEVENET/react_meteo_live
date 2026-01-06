@@ -1,40 +1,39 @@
 @import 'tailwindcss';
-@plugin 'tailwindcss-animate';
 
-@theme {
-  /* Colors - shadcn/ui compatible */
-  --color-border: hsl(280 60% 30%);
-  --color-input: hsl(260 40% 15%);
-  --color-ring: hsl(280 90% 60%);
-  --color-background: hsl(260 30% 6%);
-  --color-foreground: hsl(180 100% 90%);
+:root {
+  /* Colors - shadcn/ui compatible (OKLCH) */
+  --color-border: oklch(38% 0.08 300);
+  --color-input: oklch(22% 0.04 285);
+  --color-ring: oklch(62% 0.25 305);
+  --color-background: oklch(12% 0.03 285);
+  --color-foreground: oklch(92% 0.08 195);
 
-  --color-primary: hsl(280 90% 60%);
-  --color-primary-foreground: hsl(0 0% 100%);
+  --color-primary: oklch(62% 0.25 305);
+  --color-primary-foreground: oklch(100% 0 0);
 
-  --color-secondary: hsl(190 100% 50%);
-  --color-secondary-foreground: hsl(260 30% 6%);
+  --color-secondary: oklch(75% 0.18 200);
+  --color-secondary-foreground: oklch(12% 0.03 285);
 
-  --color-destructive: hsl(0 84% 60%);
-  --color-destructive-foreground: hsl(0 0% 98%);
+  --color-destructive: oklch(62% 0.22 25);
+  --color-destructive-foreground: oklch(98% 0 0);
 
-  --color-muted: hsl(260 30% 15%);
-  --color-muted-foreground: hsl(260 20% 60%);
+  --color-muted: oklch(22% 0.03 285);
+  --color-muted-foreground: oklch(55% 0.03 285);
 
-  --color-accent: hsl(330 90% 60%);
-  --color-accent-foreground: hsl(0 0% 100%);
+  --color-accent: oklch(65% 0.24 350);
+  --color-accent-foreground: oklch(100% 0 0);
 
-  --color-popover: hsl(260 40% 10%);
-  --color-popover-foreground: hsl(180 100% 90%);
+  --color-popover: oklch(18% 0.04 285);
+  --color-popover-foreground: oklch(92% 0.08 195);
 
-  --color-card: hsl(260 40% 8%);
-  --color-card-foreground: hsl(180 100% 90%);
+  --color-card: oklch(15% 0.04 285);
+  --color-card-foreground: oklch(92% 0.08 195);
 
   /* Neon colors */
-  --color-neon-purple: hsl(280 90% 60%);
-  --color-neon-cyan: hsl(180 100% 50%);
-  --color-neon-pink: hsl(330 90% 60%);
-  --color-neon-blue: hsl(220 100% 60%);
+  --color-neon-purple: oklch(62% 0.25 305);
+  --color-neon-cyan: oklch(80% 0.16 195);
+  --color-neon-pink: oklch(65% 0.24 350);
+  --color-neon-blue: oklch(60% 0.22 260);
 
   /* Border radius */
   --radius-sm: 0.25rem;
@@ -44,23 +43,23 @@
   /* Accordion animations (for Radix UI) */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+}
 
-  @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-    to {
-      height: var(--radix-accordion-content-height);
-    }
+@keyframes accordion-down {
+  from {
+    height: 0;
   }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
 
-  @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-    to {
-      height: 0;
-    }
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
   }
 }
 
@@ -70,24 +69,24 @@
   background:
     radial-gradient(
       ellipse at 20% 80%,
-      hsla(280, 90%, 40%, 0.3) 0%,
+      oklch(45% 0.2 305 / 0.3) 0%,
       transparent 50%
     ),
     radial-gradient(
       ellipse at 80% 20%,
-      hsla(180, 100%, 40%, 0.2) 0%,
+      oklch(60% 0.15 195 / 0.2) 0%,
       transparent 50%
     ),
     radial-gradient(
       ellipse at 50% 50%,
-      hsla(330, 90%, 40%, 0.1) 0%,
+      oklch(50% 0.2 350 / 0.1) 0%,
       transparent 70%
     ),
     linear-gradient(
       180deg,
-      hsl(260, 30%, 4%) 0%,
-      hsl(260, 40%, 8%) 50%,
-      hsl(260, 30%, 6%) 100%
+      oklch(8% 0.03 285) 0%,
+      oklch(15% 0.04 285) 50%,
+      oklch(12% 0.03 285) 100%
     );
   min-height: 100vh;
   position: relative;
@@ -100,8 +99,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(hsla(280, 60%, 40%, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, hsla(280, 60%, 40%, 0.1) 1px, transparent 1px);
+    linear-gradient(oklch(45% 0.12 305 / 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(45% 0.12 305 / 0.1) 1px, transparent 1px);
   background-size: 50px 50px;
   mask-image: linear-gradient(
     to bottom,
@@ -125,50 +124,50 @@
 /* Neon glow utilities */
 .neon-text-purple {
   text-shadow:
-    0 0 5px hsla(280, 90%, 60%, 0.8),
-    0 0 20px hsla(280, 90%, 60%, 0.6),
-    0 0 40px hsla(280, 90%, 60%, 0.4),
-    0 0 80px hsla(280, 90%, 60%, 0.2);
+    0 0 5px oklch(62% 0.25 305 / 0.8),
+    0 0 20px oklch(62% 0.25 305 / 0.6),
+    0 0 40px oklch(62% 0.25 305 / 0.4),
+    0 0 80px oklch(62% 0.25 305 / 0.2);
 }
 
 .neon-text-cyan {
   text-shadow:
-    0 0 5px hsla(180, 100%, 50%, 0.8),
-    0 0 20px hsla(180, 100%, 50%, 0.6),
-    0 0 40px hsla(180, 100%, 50%, 0.4),
-    0 0 80px hsla(180, 100%, 50%, 0.2);
+    0 0 5px oklch(80% 0.16 195 / 0.8),
+    0 0 20px oklch(80% 0.16 195 / 0.6),
+    0 0 40px oklch(80% 0.16 195 / 0.4),
+    0 0 80px oklch(80% 0.16 195 / 0.2);
 }
 
 .neon-text-pink {
   text-shadow:
-    0 0 5px hsla(330, 90%, 60%, 0.8),
-    0 0 20px hsla(330, 90%, 60%, 0.6),
-    0 0 40px hsla(330, 90%, 60%, 0.4),
-    0 0 80px hsla(330, 90%, 60%, 0.2);
+    0 0 5px oklch(65% 0.24 350 / 0.8),
+    0 0 20px oklch(65% 0.24 350 / 0.6),
+    0 0 40px oklch(65% 0.24 350 / 0.4),
+    0 0 80px oklch(65% 0.24 350 / 0.2);
 }
 
 .neon-border-purple {
   box-shadow:
-    0 0 5px hsla(280, 90%, 60%, 0.5),
-    0 0 20px hsla(280, 90%, 60%, 0.3),
-    inset 0 0 20px hsla(280, 90%, 60%, 0.1);
-  border-color: hsla(280, 90%, 60%, 0.6);
+    0 0 5px oklch(62% 0.25 305 / 0.5),
+    0 0 20px oklch(62% 0.25 305 / 0.3),
+    inset 0 0 20px oklch(62% 0.25 305 / 0.1);
+  border-color: oklch(62% 0.25 305 / 0.6);
 }
 
 .neon-border-cyan {
   box-shadow:
-    0 0 5px hsla(180, 100%, 50%, 0.5),
-    0 0 20px hsla(180, 100%, 50%, 0.3),
-    inset 0 0 20px hsla(180, 100%, 50%, 0.1);
-  border-color: hsla(180, 100%, 50%, 0.6);
+    0 0 5px oklch(80% 0.16 195 / 0.5),
+    0 0 20px oklch(80% 0.16 195 / 0.3),
+    inset 0 0 20px oklch(80% 0.16 195 / 0.1);
+  border-color: oklch(80% 0.16 195 / 0.6);
 }
 
 .neon-border-pink {
   box-shadow:
-    0 0 5px hsla(330, 90%, 60%, 0.5),
-    0 0 20px hsla(330, 90%, 60%, 0.3),
-    inset 0 0 20px hsla(330, 90%, 60%, 0.1);
-  border-color: hsla(330, 90%, 60%, 0.6);
+    0 0 5px oklch(65% 0.24 350 / 0.5),
+    0 0 20px oklch(65% 0.24 350 / 0.3),
+    inset 0 0 20px oklch(65% 0.24 350 / 0.1);
+  border-color: oklch(65% 0.24 350 / 0.6);
 }
 
 /* Glitch effect */
@@ -204,8 +203,8 @@
     0deg,
     transparent,
     transparent 2px,
-    hsla(0, 0%, 0%, 0.1) 2px,
-    hsla(0, 0%, 0%, 0.1) 4px
+    oklch(0% 0 0 / 0.1) 2px,
+    oklch(0% 0 0 / 0.1) 4px
   );
   pointer-events: none;
 }
