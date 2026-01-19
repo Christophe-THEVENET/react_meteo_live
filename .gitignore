@@ -24,6 +24,7 @@ dist-ssr
 *.sln
 *.sw?
 memo.md
+memo-modern-stack.md
 
 # API Keys
 src/API_KEYS.js

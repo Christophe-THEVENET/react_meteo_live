@@ -6,11 +6,11 @@ import { useAppStore } from '@/store/useAppStore'
 import { useCitySearch } from '@/hooks/useWeather'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Search, Zap } from 'lucide-react'
+import { Search, Zap, AlertTriangle } from 'lucide-react'
 
-// Schéma Zod pour la validation
+// Schéma Zod pour la validation (message dynamique géré dans le composant)
 const citySchema = z.object({
-  city: z.string().min(2, 'Minimum 2 caractères'),
+  city: z.string().min(2, 'MIN_2_CHARS'),
 })
 
 export default function CityInput() {
@@ -19,10 +19,21 @@ export default function CityInput() {
   const [showSuggestions, setShowSuggestions] = useState(false)
 
   // React Hook Form
-  const { register, handleSubmit, watch, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(citySchema),
     defaultValues: { city: '' },
   })
+
+  // Messages d'erreur bilingues
+  const errorMessages = {
+    MIN_2_CHARS: lang === 'fr' ? 'Minimum 2 caractères' : 'Minimum 2 characters',
+  }
 
   // Valeur actuelle de l'input (pour l'autocomplete)
   const inputValue = watch('city')
@@ -40,7 +51,7 @@ export default function CityInput() {
   }, [inputValue])
 
   // Soumission du formulaire
-  const onSubmit = (data) => {
+  const submitData = (data) => {
     setCity(data.city.trim())
     reset()
     setShowSuggestions(false)
@@ -55,7 +66,7 @@ export default function CityInput() {
 
   return (
     <div className="absolute bottom-6 left-1/2 z-10 w-[90%] max-w-2xl -translate-x-1/2">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex gap-3">
+      <form onSubmit={handleSubmit(submitData)} className="flex gap-3">
         {/* Input avec suggestions */}
         <div className="relative flex-1">
           <Input
@@ -66,10 +77,24 @@ export default function CityInput() {
                 ? '// ENTRER LOCALISATION...'
                 : '// ENTER LOCATION...'
             }
-            className="neon-border-cyan h-14 border-2 border-cyan-500/50 bg-black/60 font-mono text-lg tracking-wider text-cyan-300 uppercase backdrop-blur-md placeholder:text-cyan-700 focus:border-cyan-400 focus:ring-cyan-400/50"
+            className={`h-14 border-2 bg-black/60 font-mono text-lg tracking-wider uppercase backdrop-blur-md focus:ring-1 ${
+              errors.city
+                ? 'neon-border-pink border-pink-500/70 text-pink-300 placeholder:text-pink-700 focus:border-pink-400 focus:ring-pink-400/50'
+                : 'neon-border-cyan border-cyan-500/50 text-cyan-300 placeholder:text-cyan-700 focus:border-cyan-400 focus:ring-cyan-400/50'
+            }`}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
             autoComplete="off"
           />
+
+          {/* Message d'erreur - style terminal cyberpunk */}
+          {errors.city && (
+            <div className="neon-border-pink absolute bottom-full left-0 mb-2 flex items-center gap-2 rounded border border-pink-500/50 bg-black/90 px-3 py-2 backdrop-blur-md">
+              <AlertTriangle className="h-4 w-4 animate-pulse text-pink-500" />
+              <span className="font-mono text-sm tracking-wider text-pink-400">
+                {`> ERROR: ${errorMessages[errors.city.message] || errors.city.message}`}
+              </span>
+            </div>
+          )}
 
           {/* Liste des suggestions - style terminal */}
           {showSuggestions && suggestions?.length > 0 && (
